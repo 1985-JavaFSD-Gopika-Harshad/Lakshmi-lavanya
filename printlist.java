@@ -2,7 +2,6 @@ import java.util.List;
 
 public class BoundedTypeExample {
 
-    // Method that takes a list of elements extending Number and prints each element
     public static void printList(List<? extends Number> list) {
         for (Number number : list) {
             System.out.println(number);
@@ -10,9 +9,8 @@ public class BoundedTypeExample {
     }
 
     public static void main(String[] args) {
-        // Example usage
-        List<Integer> intList = List.of(1, 2, 3, 4, 5);
-        List<Double> doubleList = List.of(1.1, 2.2, 3.3);
+        List<Integer> intList = List.of(5, 6, 7, 8, 9);
+        List<Double> doubleList = List.of(7.1, 9.4, 6.6);
 
         System.out.println("Integer List:");
         printList(intList);
