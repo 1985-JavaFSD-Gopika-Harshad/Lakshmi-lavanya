@@ -1,6 +1,7 @@
 package com.revature.model;
 
 
+import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,18 +13,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-	
-	@Table(name="category")
-	public class Category {
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
-	    private String name;
+   
+    @Table(name="orders") // Renamed from "order" to "orders"
+    public class Order {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        private Long userId; // Foreign key
+        private LocalDate orderDate; // Change to LocalDate if needed
+        private Double total;
 
 }

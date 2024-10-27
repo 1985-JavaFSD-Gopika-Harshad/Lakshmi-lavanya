@@ -1,38 +1,64 @@
 package com.revature.service;
 
+import com.revature.dto.ProductDTO;
+import com.revature.model.Product;
+import com.revature.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.revature.model.Product;
-import com.revature.repository.ProductRepository;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public ProductDTO addProduct(ProductDTO productDTO) {
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setUserId(productDTO.getUserId());
+        product.setCategoryId(productDTO.getCategoryId());
+        return convertToDTO(productRepository.save(product));
     }
 
-    public Product findById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setUserId(productDTO.getUserId());
+        product.setCategoryId(productDTO.getCategoryId());
+        return convertToDTO(productRepository.save(product));
     }
 
-    public Product save(Product product) {
-        return productRepository.save(product);
-    }
-
-    public void delete(Long id) {
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
-    public List<Product> findLowStockProducts(int threshold) {
-        return productRepository.findAll().stream()
-                .filter(product -> product.getQuantity() < threshold)
-                .toList();
+    public ProductDTO getProductById(Long id) {
+        return convertToDTO(productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
+    public List<ProductDTO> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ProductDTO convertToDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setUserId(product.getUserId());
+        dto.setCategoryId(product.getCategoryId());
+        return dto;
+    }
 }
